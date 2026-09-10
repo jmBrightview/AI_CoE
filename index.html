@@ -343,11 +343,11 @@
 <body>
 <div class="site-gate" id="siteGate">
   <div class="site-gate-card">
-    <h2>Which site are you with?</h2>
-    <p class="site-gate-hint">Pick your site once — this browser will remember it next time.</p>
+    <h2>Which center are you with?</h2>
+    <p class="site-gate-hint">Pick your center once — this browser will remember it, and your state will auto-fill to match every time you open FeeGate.</p>
     <select id="siteGateSelect"></select>
     <button class="site-gate-btn" id="siteGateBtn" type="button">Continue</button>
-    <p class="site-gate-note">You can change this later using the "Change" link next to the site name.</p>
+    <p class="site-gate-note">You can change this later using the "Change" link next to the center name.</p>
   </div>
 </div>
 <div class="wrap">
@@ -360,7 +360,7 @@
       <span class="divider">·</span>
       <span class="org">Records Request Desk</span>
       <span class="site-badge" id="siteBadge" style="display:none;">
-        <span class="site-badge-label">Site:</span>
+        <span class="site-badge-label">Center:</span>
         <span class="site-badge-name" id="siteBadgeName"></span>
         <button class="site-badge-change" id="siteChangeBtn" type="button">Change</button>
       </span>
@@ -960,10 +960,10 @@ populateStates();
 populateRequesters();
 renderFields();
 
-// ---------- site gate: pick once, remember via localStorage ----------
-// NOTE: placeholder list — swap PLACEHOLDER_SITES for the real 97 site names when ready.
-const PLACEHOLDER_SITES = Array.from({length: 97}, (_, i) => `Site ${String(i+1).padStart(3,'0')}`);
-const SITE_STORAGE_KEY = 'bv_feegate_site';
+// ---------- center gate: pick your center once, remember via localStorage,
+// and auto-set the State field to match every time the page loads ----------
+const CENTERS = [{"name": "Akron", "state": "OH", "key": "Akron||OH"}, {"name": "Arlington", "state": "MA", "key": "Arlington||MA"}, {"name": "Asheboro", "state": "NC", "key": "Asheboro||NC"}, {"name": "Ashtabula", "state": "OH", "key": "Ashtabula||OH"}, {"name": "Attleboro", "state": "MA", "key": "Attleboro||MA"}, {"name": "Batavia", "state": "OH", "key": "Batavia||OH"}, {"name": "Brighton", "state": "MA", "key": "Brighton||MA"}, {"name": "Brockton", "state": "MA", "key": "Brockton||MA"}, {"name": "Campbellsville", "state": "KY", "key": "Campbellsville||KY"}, {"name": "Canton", "state": "OH", "key": "Canton||OH"}, {"name": "Centerville", "state": "OH", "key": "Centerville||OH"}, {"name": "Chesapeake (Aspire - North - Research Dr)", "state": "VA", "key": "Chesapeake (Aspire - North - Research Dr)||VA"}, {"name": "Chesapeake S (Right Path - Innovation Dr)", "state": "VA", "key": "Chesapeake S (Right Path - Innovation Dr)||VA"}, {"name": "Chillicothe", "state": "OH", "key": "Chillicothe||OH"}, {"name": "Colerain", "state": "OH", "key": "Colerain||OH"}, {"name": "Columbus (West - Hilliard)", "state": "OH", "key": "Columbus (West - Hilliard)||OH"}, {"name": "Columbus East (Whitehall)", "state": "OH", "key": "Columbus East (Whitehall)||OH"}, {"name": "Covington", "state": "KY", "key": "Covington||KY"}, {"name": "Danville", "state": "VA", "key": "Danville||VA"}, {"name": "Dayton North", "state": "OH", "key": "Dayton North||OH"}, {"name": "Dover", "state": "OH", "key": "Dover||OH"}, {"name": "Easton", "state": "MD", "key": "Easton||MD"}, {"name": "Elyria", "state": "OH", "key": "Elyria||OH"}, {"name": "Erlanger", "state": "KY", "key": "Erlanger||KY"}, {"name": "Fairfield", "state": "OH", "key": "Fairfield||OH"}, {"name": "Fall River", "state": "MA", "key": "Fall River||MA"}, {"name": "Fredericksburg", "state": "VA", "key": "Fredericksburg||VA"}, {"name": "Georgetown", "state": "OH", "key": "Georgetown||OH"}, {"name": "Georgetown KY", "state": "KY", "key": "Georgetown KY||KY"}, {"name": "Glasgow", "state": "KY", "key": "Glasgow||KY"}, {"name": "Glendale", "state": "AZ", "key": "Glendale||AZ"}, {"name": "Greensboro", "state": "NC", "key": "Greensboro||NC"}, {"name": "Harrisonburg", "state": "VA", "key": "Harrisonburg||VA"}, {"name": "Haverhill", "state": "MA", "key": "Haverhill||MA"}, {"name": "Hazard", "state": "KY", "key": "Hazard||KY"}, {"name": "Henderson", "state": "KY", "key": "Henderson||KY"}, {"name": "Hyannis", "state": "MA", "key": "Hyannis||MA"}, {"name": "Kent", "state": "OH", "key": "Kent||OH"}, {"name": "Lancaster (Life Spring)", "state": "OH", "key": "Lancaster (Life Spring)||OH"}, {"name": "Lawrence", "state": "MA", "key": "Lawrence||MA"}, {"name": "Lexington", "state": "KY", "key": "Lexington||KY"}, {"name": "Lima", "state": "OH", "key": "Lima||OH"}, {"name": "London", "state": "KY", "key": "London||KY"}, {"name": "Louisville", "state": "KY", "key": "Louisville||KY"}, {"name": "Lowell", "state": "MA", "key": "Lowell||MA"}, {"name": "Lynchburg", "state": "VA", "key": "Lynchburg||VA"}, {"name": "Lynn", "state": "MA", "key": "Lynn||MA"}, {"name": "Madisonville", "state": "KY", "key": "Madisonville||KY"}, {"name": "Mansfield", "state": "OH", "key": "Mansfield||OH"}, {"name": "Marietta", "state": "OH", "key": "Marietta||OH"}, {"name": "Marion", "state": "OH", "key": "Marion||OH"}, {"name": "Martinsville", "state": "VA", "key": "Martinsville||VA"}, {"name": "Mason", "state": "OH", "key": "Mason||OH"}, {"name": "Maumee (Toledo)", "state": "OH", "key": "Maumee (Toledo)||OH"}, {"name": "Middletown", "state": "OH", "key": "Middletown||OH"}, {"name": "Midlothian (Richmond)", "state": "VA", "key": "Midlothian (Richmond)||VA"}, {"name": "Morgan", "state": "OH", "key": "Morgan||OH"}, {"name": "Newark North  (Life Spring)", "state": "OH", "key": "Newark North  (Life Spring)||OH"}, {"name": "Newark S (W. Main st)", "state": "OH", "key": "Newark S (W. Main st)||OH"}, {"name": "Newport News", "state": "VA", "key": "Newport News||VA"}, {"name": "Nicholasville", "state": "KY", "key": "Nicholasville||KY"}, {"name": "Norfolk", "state": "VA", "key": "Norfolk||VA"}, {"name": "Ocean City", "state": "MD", "key": "Ocean City||MD"}, {"name": "Paris", "state": "KY", "key": "Paris||KY"}, {"name": "Parma", "state": "OH", "key": "Parma||OH"}, {"name": "Pikeville", "state": "KY", "key": "Pikeville||KY"}, {"name": "Piqua", "state": "OH", "key": "Piqua||OH"}, {"name": "Plymouth", "state": "MA", "key": "Plymouth||MA"}, {"name": "Portsmouth", "state": "OH", "key": "Portsmouth||OH"}, {"name": "Prince George", "state": "VA", "key": "Prince George||VA"}, {"name": "Reidsville", "state": "NC", "key": "Reidsville||NC"}, {"name": "Roanoke", "state": "VA", "key": "Roanoke||VA"}, {"name": "Salisbury", "state": "NC", "key": "Salisbury||NC"}, {"name": "Sandusky", "state": "OH", "key": "Sandusky||OH"}, {"name": "Scottsdale", "state": "AZ", "key": "Scottsdale||AZ"}, {"name": "Somerset", "state": "KY", "key": "Somerset||KY"}, {"name": "Somerville", "state": "MA", "key": "Somerville||MA"}, {"name": "Springfield", "state": "OH", "key": "Springfield||OH"}, {"name": "Springfield", "state": "MA", "key": "Springfield||MA"}, {"name": "Stoughton", "state": "MA", "key": "Stoughton||MA"}, {"name": "Suffolk", "state": "VA", "key": "Suffolk||VA"}, {"name": "Tempe", "state": "AZ", "key": "Tempe||AZ"}, {"name": "Virginia Beach", "state": "VA", "key": "Virginia Beach||VA"}, {"name": "Warren", "state": "OH", "key": "Warren||OH"}, {"name": "Willoughby", "state": "OH", "key": "Willoughby||OH"}, {"name": "Wilmington", "state": "OH", "key": "Wilmington||OH"}, {"name": "Winchester", "state": "VA", "key": "Winchester||VA"}, {"name": "Woodbridge", "state": "VA", "key": "Woodbridge||VA"}, {"name": "Worcester", "state": "MA", "key": "Worcester||MA"}, {"name": "Youngstown", "state": "OH", "key": "Youngstown||OH"}, {"name": "Zanesville", "state": "OH", "key": "Zanesville||OH"}];
+const CENTER_STORAGE_KEY = 'bv_feegate_center';
 
 const siteGate = document.getElementById('siteGate');
 const siteGateSelect = document.getElementById('siteGateSelect');
@@ -973,17 +973,26 @@ const siteBadgeName = document.getElementById('siteBadgeName');
 const siteChangeBtn = document.getElementById('siteChangeBtn');
 
 function populateSiteGateOptions(){
-  siteGateSelect.innerHTML = PLACEHOLDER_SITES.map(s => `<option value="${s}">${s}</option>`).join('');
+  const sorted = [...CENTERS].sort((a,b) => a.name.localeCompare(b.name));
+  siteGateSelect.innerHTML = sorted.map(c => `<option value="${c.key}">${c.name} (${c.state})</option>`).join('');
 }
 
-function showSiteBadge(site){
-  siteBadgeName.textContent = site;
+function applyCenterState(center){
+  // sets the State dropdown in card 1 to match the chosen center, and refreshes downstream fields
+  if(!center) return;
+  stateSelect.value = center.state;
+  populateRequesters();
+  renderFields();
+}
+
+function showSiteBadge(center){
+  siteBadgeName.textContent = `${center.name} (${center.state})`;
   siteBadge.style.display = 'inline-flex';
 }
 
 function openSiteGate(){
   populateSiteGateOptions();
-  const current = localStorage.getItem(SITE_STORAGE_KEY);
+  const current = localStorage.getItem(CENTER_STORAGE_KEY);
   if(current) siteGateSelect.value = current;
   siteGate.classList.remove('hidden');
 }
@@ -992,21 +1001,32 @@ function closeSiteGate(){
   siteGate.classList.add('hidden');
 }
 
-// on load: check localStorage
-let savedSite = null;
-try { savedSite = localStorage.getItem(SITE_STORAGE_KEY); } catch(e) { /* storage unavailable in this context */ }
+function findCenterByKey(key){
+  return CENTERS.find(c => c.key === key) || null;
+}
 
-if(savedSite){
-  showSiteBadge(savedSite);
+// on load: check localStorage — if a center was already picked, skip the gate,
+// show the badge, and auto-set the State field to that center's state.
+let savedCenterKey = null;
+try { savedCenterKey = localStorage.getItem(CENTER_STORAGE_KEY); } catch(e) { /* storage unavailable in this context */ }
+
+const savedCenter = savedCenterKey ? findCenterByKey(savedCenterKey) : null;
+
+if(savedCenter){
+  showSiteBadge(savedCenter);
+  applyCenterState(savedCenter);
   closeSiteGate();
 } else {
   openSiteGate();
 }
 
 siteGateBtn.addEventListener('click', () => {
-  const chosen = siteGateSelect.value;
-  try { localStorage.setItem(SITE_STORAGE_KEY, chosen); } catch(e) { /* storage unavailable in this context */ }
-  showSiteBadge(chosen);
+  const chosenKey = siteGateSelect.value;
+  const center = findCenterByKey(chosenKey);
+  if(!center) return;
+  try { localStorage.setItem(CENTER_STORAGE_KEY, chosenKey); } catch(e) { /* storage unavailable in this context */ }
+  showSiteBadge(center);
+  applyCenterState(center);
   closeSiteGate();
 });
 
